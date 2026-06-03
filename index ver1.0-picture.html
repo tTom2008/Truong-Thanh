@@ -150,6 +150,28 @@
             color: red; background: rgba(0,0,0,0.85);
             z-index: 9999; padding: 10px; font-size: 12px;
         }
+    #onboarding {
+    position: fixed; inset: 0; z-index: 9999;
+    background: rgba(0,0,0,0.90);
+    display: flex; 
+    align-items: flex-start; /* Sửa từ 'center' thành 'flex-start' để không bị cắt mép trên */
+    justify-content: center;
+    backdrop-filter: blur(6px);
+    overflow-y: auto; /* Bật thanh cuộn dọc khi nội dung tràn viền */
+    padding: 30px 10px; /* Thêm khoảng trống trên dưới để cuộn mượt hơn */
+}
+
+.ob-card {
+    margin: auto; /* Đảm bảo thẻ tự căn giữa nếu màn hình cao hơn thẻ */
+    background: linear-gradient(145deg, #0a0a0a, #111218);
+    border: 1px solid rgba(255,215,0,0.22);
+    border-radius: 22px; padding: 32px 36px;
+    max-width: 660px; width: 93%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.85),
+                inset 0 1px 0 rgba(255,255,255,0.05);
+    display: flex; flex-direction: column;
+    align-items: center; gap: 18px;
+}
     </style>
 </head>
 <body>
