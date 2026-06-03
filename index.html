@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lễ Trưởng Thành</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Premium ceremonial fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Rokkitt:wght@400;700;800&family=Dancing+Script:wght@600;700&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <div id="login-screen" class="screen">
+        <div class="login-left">
+            <img src="anh-lock.jpg" alt="My Girl" class="girl-img">
+        </div>
+        <div class="login-right">
+            <div class="login-box">
+                <h2>XIN CHÀO</h2>
+                <p>Nhập mã PIN để mở khóa!</p>
+                
+                <div class="pin-display" id="pin-display">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+                <p id="error-msg" style="color: #b8860b; display: none; font-size: 0.9em; margin-bottom: 10px;">Sai mật khẩu rồi!</p>
+                <div class="numpad">
+                    <button onclick="addNumber(1)">1</button>
+                    <button onclick="addNumber(2)">2</button>
+                    <button onclick="addNumber(3)">3</button>
+                    <button onclick="addNumber(4)">4</button>
+                    <button onclick="addNumber(5)">5</button>
+                    <button onclick="addNumber(6)">6</button>
+                    <button onclick="addNumber(7)">7</button>
+                    <button onclick="addNumber(8)">8</button>
+                    <button onclick="addNumber(9)">9</button>
+                    <button onclick="clearPin()" class="action-btn">✕</button>
+                    <button onclick="addNumber(0)">0</button>
+                    <button onclick="checkPin()" class="action-btn" style="color:#c8960c">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="main-screen" class="screen hidden">
+        <div class="decorations">
+            <div class="floating-item">🌿</div>
+            <div class="floating-item">✨</div>
+            <div class="floating-item">💫</div>
+            <div class="floating-item">🌟</div>
+            <div class="floating-item">🌿</div>
+            <div class="floating-item">✨</div>
+            <div class="floating-item">💎</div>
+        </div>
+
+        <h1 class="main-title">LỄ TRƯỞNG THÀNH</h1>
+
+        <div class="menu-grid">
+            <div class="menu-item" onclick="openModal('video-modal')">
+                <span class="menu-icon">🎬</span>
+                <span>Video</span>
+            </div>
+            <div class="menu-item" onclick="openModal('picture-modal')">
+                <span class="menu-icon">🖼️</span>
+                <span>Picture</span>
+            </div>
+            <div class="menu-item" onclick="openModal('letter-modal')">
+                <span class="menu-icon">💌</span>
+                <span>Letter</span>
+            </div>
+            <div class="menu-item" onclick="openModal('gift-modal')">
+                <span class="menu-icon">🎁</span>
+                <span>Gift</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIDEO MODAL -->
+    <div id="video-modal" class="modal hidden">
+        <div class="modal-content player-ui">
+            <button class="close-btn" onclick="closeModal('video-modal')">&times;</button>
+            <p class="player-header" id="vid-header">Family Video</p>
+            <div class="video-container">
+                <video id="my-video"></video>
+            </div>
+            <h2 class="video-title" id="vid-title">KHOẢNH KHẮC GIA ĐÌNH</h2>
+            
+            <div class="progress-container">
+                <span id="current-time">0:00</span>
+                <input type="range" id="progress-bar" value="0" max="100">
+                <span id="duration">0:00</span>
+            </div>
+            
+            <div class="controls">
+                <button class="ctrl-btn" onclick="seekVideo(-5)">⏮</button>
+                <button class="play-btn" id="play-pause-btn" onclick="togglePlay()">▶</button>
+                <button class="ctrl-btn" onclick="seekVideo(5)">⏭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LETTER MODAL -->
+    <div id="letter-modal" class="modal hidden">
+        <div class="modal-content letter-bg">
+            <button class="close-btn" onclick="closeModal('letter-modal')">&times;</button>
+            <div class="letter-text">
+                <h3 id="letter-greeting">Hello Bạn,</h3>
+                <p><span id="typewriter-text"></span><span class="cursor">|</span></p>
+                <p class="signature">- From Lộc -</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- GIFT MODAL -->
+    <div id="gift-modal" class="modal hidden">
+        <div class="modal-content gift-box" id="gift-box">
+            <button class="close-btn" onclick="closeModal('gift-modal')">&times;</button>
+            <button class="expand-btn" onclick="toggleFullscreen('gift-box', 'expand-icon')"><span id="expand-icon">⛶</span></button>
+            <div id="flower-container" style="width: 100%; height: 100%; border-radius: 15px; overflow: hidden;">
+                <iframe src="Gift.html" width="100%" height="100%" frameborder="0" style="border: none;" allow="autoplay"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- PICTURE MODAL -->
+    <div id="picture-modal" class="modal hidden">
+        <div class="modal-content gift-box" id="picture-box">
+            <button class="close-btn" onclick="closeModal('picture-modal')">&times;</button>
+            <button class="expand-btn" onclick="toggleFullscreen('picture-box', 'picture-expand-icon')"><span id="picture-expand-icon">⛶</span></button>
+            <div id="picture-container" style="width: 100%; height: 100%; border-radius: 15px; overflow: hidden;">
+                <iframe src="index-picture.html" width="100%" height="100%" frameborder="0" style="border: none;" allow="autoplay"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <audio id="intro-music" src="intro.mp3" loop></audio>
+    <script src="script.js" defer></script>
+</body>
+</html>
