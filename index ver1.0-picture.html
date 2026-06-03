@@ -781,6 +781,9 @@ function stopOnboardingCam() {
 // ═══════════════════════════════════════════════════════
 // 13. START SYSTEM
 // ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════
+// 13. START SYSTEM
+// ═══════════════════════════════════════════════════════
 function startSystem() {
     stopOnboardingCam();
     document.getElementById('onboarding').style.display = 'none';
@@ -803,6 +806,10 @@ function startSystem() {
 
     let gestureCooldown = 0;
     let frameCnt = 0;
+    
+    // --- THÊM 2 BIẾN ĐỂ QUẢN LÝ THỜI GIAN KHÓA ---
+    let stateLockUntil = 0; 
+    const PHOTO_LOCK_TIME = 3000; // 3000ms = 3 giây
 
     hands.onResults(results => {
         // Vẽ lên preview phóng to
@@ -816,25 +823,41 @@ function startSystem() {
 
             const g   = classifyGesture(lm);
             const now = Date.now();
+            
+            // Kiểm tra xem hệ thống có đang trong thời gian "khóa" 3s không
+            const isLocked = now < stateLockUntil;
 
-            if (g === 'FIST') {
-                state = 'TREE';
-                statusEl.innerText = '✊ Thu Số 18';
-                statusEl.style.color = '#FFD700';
+            // Xử lý chuyển trạng thái chỉ khi KHÔNG bị khóa
+            if (!isLocked) {
+                if (g === 'FIST') {
+                    state = 'TREE';
+                    statusEl.innerText = '✊ Thu Số 18';
+                    statusEl.style.color = '#FFD700';
 
-            } else if (g === 'OPEN') {
-                state = 'EXPLODE';
-                statusEl.innerText = '🖐 Vòng Ảnh Ký Ức';
-                statusEl.style.color = '#FFA500';
+                } else if (g === 'OPEN') {
+                    state = 'EXPLODE';
+                    statusEl.innerText = '🖐 Vòng Ảnh Ký Ức';
+                    statusEl.style.color = '#FFA500';
 
-            } else if (g === 'PINCH') {
-                if (state === 'EXPLODE' || state === 'PHOTO') {
-                    state = 'PHOTO';
-                    statusEl.innerText = '👌 Xem Ảnh';
-                    statusEl.style.color = '#00FFFF';
+                } else if (g === 'PINCH') {
+                    if (state === 'EXPLODE' || state === 'TREE' || state === 'PHOTO') {
+                        state = 'PHOTO';
+                        // Kích hoạt khóa 3 giây để chống giật
+                        stateLockUntil = now + PHOTO_LOCK_TIME; 
+                        statusEl.innerText = '👌 Xem Ảnh';
+                        statusEl.style.color = '#00FFFF';
+                    }
                 }
+            } else {
+                // (Tùy chọn) Hiển thị đếm ngược 3s trên thanh badge cho người dùng biết
+                if (state === 'PHOTO') {
+                    const timeLeft = Math.ceil((stateLockUntil - now) / 1000);
+                    statusEl.innerText = `👌 Xem Ảnh (${timeLeft}s)`;
+                }
+            }
 
-            } else if (g === 'V') {
+            // Cử chỉ chữ V (Random ảnh) hoạt động độc lập, không bị ảnh hưởng bởi khóa
+            if (g === 'V') {
                 if (now - gestureCooldown > SHUFFLE_CD) {
                     gestureCooldown = now;
                     shufflePhotos();
@@ -842,9 +865,12 @@ function startSystem() {
             }
         } else {
             handPresent = false;
-            if (state !== 'PHOTO') state = 'TREE';
-            statusEl.innerText   = '✨ 18 Năm Trưởng Thành ✨';
-            statusEl.style.color = '#FFD700';
+            // Nếu không có tay và HẾT thời gian khóa mới cho phép tự động quay về TREE
+            if (state !== 'PHOTO' && Date.now() >= stateLockUntil) {
+                state = 'TREE';
+                statusEl.innerText   = '✨ 18 Năm Trưởng Thành ✨';
+                statusEl.style.color = '#FFD700';
+            }
         }
     });
 
@@ -858,7 +884,6 @@ function startSystem() {
     });
     cameraUtils.start();
 }
-
 // ═══════════════════════════════════════════════════════
 // 14. RESIZE + BOOT
 // ═══════════════════════════════════════════════════════
@@ -880,4 +905,3 @@ function logError(e) {
 </script>
 </body>
 </html>
-
